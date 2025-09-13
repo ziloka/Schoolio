@@ -1,0 +1,6 @@
+spring.ai.openai.api-key=_
+spring.ai.openai.base-url=https://api.groq.com/openai/v1
+
+spring.servlet.multipart.max-file-size=1GB
+spring.servlet.multipart.max-request-size=1GB
+spring.servlet.multipart.file-size-threshold=2MB

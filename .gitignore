@@ -33,3 +33,6 @@ application.properties
 # IDE config
 .idea
 .vscode
+
+# more stuff
+bin
