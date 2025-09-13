@@ -1,13 +1,15 @@
-// package com.example.schoolio;
+package com.example.schoolio;
 
-// import org.springframework.boot.SpringApplication;
-// import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
-// @SpringBootApplication
-// public class ServingWebContentApplication {
+@SpringBootApplication
+@ComponentScan({"com.example.schoolio"})
+public class ServingWebContentApplication {
 
-//     public static void main(String[] args) {
-//         SpringApplication.run(ServingWebContentApplication.class, args);
-//     }
+    public static void main(String[] args) {
+        SpringApplication.run(ServingWebContentApplication.class, args);
+    }
 
-// }
+}

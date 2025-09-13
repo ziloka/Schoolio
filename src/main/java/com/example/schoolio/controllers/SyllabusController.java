@@ -34,7 +34,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.ArrayList;
 
-@SpringBootApplication
+// @SpringBootApplication
 @RestController
 public class SyllabusController {
 
@@ -42,13 +42,13 @@ public class SyllabusController {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final List<String> SCOPES = Collections.singletonList("https://www.googleapis.com/auth/calendar.events");
 
-    /**
-     * Main application entry point.
-     * @param args Command line arguments.
-     */
-    public static void main(String[] args) {
-        SpringApplication.run(SyllabusController.class, args);
-    }
+    // /**
+    //  * Main application entry point.
+    //  * @param args Command line arguments.
+    //  */
+    // public static void main(String[] args) {
+    //     SpringApplication.run(SyllabusController.class, args);
+    // }
 
     /**
      * Endpoint to upload a syllabus PDF and create calendar events.
