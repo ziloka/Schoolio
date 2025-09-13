@@ -1,5 +1,7 @@
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpHeaders;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
@@ -42,13 +44,12 @@ public class SyllabusController {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final List<String> SCOPES = Collections.singletonList("https://www.googleapis.com/auth/calendar.events");
 
-    // /**
-    //  * Main application entry point.
-    //  * @param args Command line arguments.
-    //  */
-    // public static void main(String[] args) {
-    //     SpringApplication.run(SyllabusController.class, args);
-    // }
+    @GetMapping("/upload-syllabus")
+    public ResponseEntity<String> getUploadSyllabus(Model model) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "/");
+        return new ResponseEntity<String>(headers,HttpStatus.FOUND);
+    }
 
     /**
      * Endpoint to upload a syllabus PDF and create calendar events.
