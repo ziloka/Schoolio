@@ -31,7 +31,7 @@
   <!-- Header -->
   <header class="bg-gradient-to-r from-purple-700 via-indigo-600 to-blue-500 text-white py-12 shadow-xl text-center">
     <h1 class="text-5xl font-bold">Schoolio</h1>
-    <p class="text-xl mt-2">Your smart academic planner</p>
+    <p class="text-xl mt-2">Your Smart Academic Planner</p>
   </header>
 
   <!-- Upload Section -->
@@ -91,6 +91,8 @@
     <!-- Calendar -->
     <div class="bg-white/90 backdrop-blur-md p-8 rounded-3xl shadow-2xl">
       <h2 class="text-2xl font-semibold mb-4">Calendar</h2>
+         <h3 id="calendarHeader" class="text-xl font-semibold mb-4 text-center"></h3>
+
       <div class="grid grid-cols-7 gap-2 text-center text-sm font-semibold text-gray-700 mb-2">
         <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
       </div>
@@ -139,6 +141,12 @@
 
   <!-- JavaScript -->
 <script>
+  function getPriorityColor(priority) {
+    if (priority >= 8) return "text-red-600";
+    if (priority >= 4) return "text-orange-500";
+    return "text-green-600";
+  }
+    
   const tasks = [];
   const events = [];
   let currentDayOffset = 0;
@@ -150,31 +158,35 @@
   }
 
   function renderCalendar() {
-    const calendar = document.getElementById("calendar");
-    calendar.innerHTML = "";
+  const calendar = document.getElementById("calendar");
+  calendar.innerHTML = "";
 
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth();
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
 
-    const firstDayOfMonth = new Date(year, month, 1);
-    const lastDayOfMonth = new Date(year, month + 1, 0);
-    const startDay = firstDayOfMonth.getDay();
-    const totalDays = lastDayOfMonth.getDate();
-    const totalCells = Math.ceil((startDay + totalDays) / 7) * 7;
+  // Set calendar header
+  const monthName = today.toLocaleString("default", { month: "long" });
+  document.getElementById("calendarHeader").textContent = `${monthName} ${year}`;
 
-    for (let i = 0; i < totalCells; i++) {
-      const cell = document.createElement("div");
-      cell.className = "bg-gray-50 p-4 rounded-lg border h-24 flex items-start justify-start";
+  const firstDayOfMonth = new Date(year, month, 1);
+  const lastDayOfMonth = new Date(year, month + 1, 0);
+  const startDay = firstDayOfMonth.getDay();
+  const totalDays = lastDayOfMonth.getDate();
+  const totalCells = Math.ceil((startDay + totalDays) / 7) * 7;
 
-      const dayNumber = i - startDay + 1;
-      if (i >= startDay && dayNumber <= totalDays) {
-        cell.innerHTML = `<strong>${dayNumber}</strong>`;
-      }
+  for (let i = 0; i < totalCells; i++) {
+    const cell = document.createElement("div");
+    cell.className = "bg-gray-50 p-4 rounded-lg border h-24 flex items-start justify-start";
 
-      calendar.appendChild(cell);
+    const dayNumber = i - startDay + 1;
+    if (i >= startDay && dayNumber <= totalDays) {
+      cell.innerHTML = `<strong>${dayNumber}</strong>`;
     }
+
+    calendar.appendChild(cell);
   }
+}
 
   function renderTodoList() {
     const list = document.getElementById("todo-list");
@@ -204,8 +216,13 @@
       checkbox.className = "w-5 h-5 accent-green-600";
       checkbox.checked = task.done;
       checkbox.addEventListener("change", () => {
-        task.done = true;
-        task.priority = 0;
+        task.done = checkbox.checked;
+
+        // Optional: If unchecked, restore priority to default (or leave as-is)
+        if (!task.done && task.priority === 0) {
+            task.priority = 1.0; // or any fallback value
+        }
+
         renderTodoList();
       });
 
@@ -217,7 +234,7 @@
       left.appendChild(label);
 
       const tag = document.createElement("span");
-      tag.className = task.done ? "text-green-600 font-bold" : "text-red-600 font-semibold";
+      tag.className = task.done ? "text-green-600 font-bold" : `${getPriorityColor(task.priority)} font-semibold`;
       tag.textContent = task.done ? "✓" : `Priority: ${task.priority}`;
 
       topRow.appendChild(left);
@@ -237,11 +254,20 @@
         editBtn.textContent = "✏️ Edit Priority";
         editBtn.className = "text-blue-600 hover:underline";
         editBtn.onclick = () => {
-          const newPriority = prompt("Enter new priority:", task.priority);
-          if (newPriority !== null && !isNaN(parseFloat(newPriority))) {
-            task.priority = parseFloat(newPriority);
-            renderTodoList();
-          }
+            const newPriority = prompt("Enter new priority (0–10):", task.priority);
+            const parsed = parseFloat(newPriority);
+
+            if (
+                newPriority !== null &&
+                !isNaN(parsed) &&
+                parsed >= 0 &&
+                parsed <= 10
+            ) {
+                task.priority = parsed;
+                renderTodoList();
+            } else {
+                alert("Please enter a valid priority between 0 and 10.");
+            }
         };
 
         const deleteBtn = document.createElement("button");
@@ -293,8 +319,8 @@
     const date = document.getElementById("eventDate").value;
     const time = document.getElementById("eventTime").value;
 
-    if (!name || !date || !time) {
-      alert("Please fill out all event fields.");
+    if (!name || !date) {
+      alert("Please enter a valid priority between 0 and 10.");
       return;
     }
 
@@ -312,10 +338,12 @@
 
   document.getElementById("addManualTaskBtn").addEventListener("click", () => {
     const name = document.getElementById("manualTaskName").value.trim();
-    const date = new Date(document.getElementById("manualTaskDate").value);
+    const rawDate = document.getElementById("manualTaskDate").value;
+    const date = new Date(rawDate + "T00:00:00"); 
+    // Ensures correct local date    
     const priority = parseFloat(document.getElementById("manualTaskPriority").value);
 
-    if (!name || isNaN(priority) || isNaN(date.getTime())) {
+    if (!name || isNaN(priority) || isNaN(date.getTime()) || priority < 0 || priority > 10) {
       alert("Please fill out all fields correctly.");
       return;
     }
