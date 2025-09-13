@@ -20,193 +20,366 @@
     h1, h2 {
       font-family: 'Playfair Display', serif;
     }
+    .completed {
+      text-decoration: line-through;
+      color: #6b7280;
+    }
   </style>
 </head>
 <body class="min-h-screen text-gray-800">
 
   <!-- Header -->
-  <header class="bg-gradient-to-r from-purple-700 via-indigo-600 to-blue-500 text-white py-12 shadow-xl">
-    <div class="text-center">
-      <h1 class="text-5xl font-bold tracking-wide">Schoolio</h1>
-      <p class="text-xl mt-3">Your smart academic planner</p>
-    </div>
+  <header class="bg-gradient-to-r from-purple-700 via-indigo-600 to-blue-500 text-white py-12 shadow-xl text-center">
+    <h1 class="text-5xl font-bold">Schoolio</h1>
+    <p class="text-xl mt-2">Your smart academic planner</p>
   </header>
 
-  <!-- Syllabus Upload -->
-  <section class="max-w-6xl mx-auto mt-14 bg-white/90 backdrop-blur-md p-10 rounded-3xl shadow-2xl">
-    <h2 class="text-3xl font-semibold mb-4">Upload Your Syllabus</h2>
-    <p class="text-gray-600 mb-6 text-lg">Automatically add assignments to your calendar and planner.</p>
-    <div class="flex flex-col md:flex-row items-center gap-6">
-      <form action="/upload-syllabus" method="post" enctype="multipart/form-data">
-          <input type="file" id="syllabusUpload" class="block w-full text-sm text-gray-700 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-100 file:text-purple-700 hover:file:bg-purple-200" />
-          <button id="uploadBtn" class="bg-indigo-600 text-white px-6 py-3 rounded-full hover:bg-indigo-700 hover:scale-105 transition-all">Upload</button>
-      </form>
+  <!-- Upload Section -->
+  <section class="max-w-6xl mx-auto mt-10">
+    <div class="bg-white/90 backdrop-blur-md p-8 rounded-3xl shadow-2xl">
+      <form action="/upload-syllabus" method="post" enctype="multipart/form-data"></form>
+        <h2 class="text-2xl font-semibold mb-4">Upload Your Syllabus</h2>
+        <input type="file" id="syllabusUpload" class="w-full p-3 border rounded-lg" />
+        <button id="uploadBtn" class="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700">Upload & Parse</button>
       </form>
     </div>
   </section>
 
-  <!-- Preferences -->
-  <section class="max-w-6xl mx-auto mt-14 bg-white/90 backdrop-blur-md p-10 rounded-3xl shadow-2xl">
-    <h2 class="text-3xl font-semibold mb-4">Personal Preferences</h2>
-    <form id="preferencesForm" class="space-y-6 text-lg">
+  <!-- Preferences Section -->
+  <section class="max-w-6xl mx-auto mt-10">
+    <form id="preferencesForm" class="bg-white/90 backdrop-blur-md p-8 rounded-3xl shadow-2xl space-y-6">
+      <h2 class="text-2xl font-semibold mb-4">Your Preferences</h2>
+
       <div>
-        <label for="organizeBy" class="block font-semibold mb-2">How do you prefer to organize tasks?</label>
-        <select id="organizeBy" class="w-full p-3 rounded-lg border border-gray-300">
-          <option value="time">By Time Required</option>
+        <label for="organizeBy" class="block font-semibold mb-2">Task Organization Method</label>
+        <p class="text-sm text-gray-500 mb-2">Choose how tasks should be sorted in your planner.</p>
+        <select id="organizeBy" class="w-full p-3 rounded-lg border">
+          <option>--</option>
           <option value="deadline">By Deadline</option>
-          <option value="subject">By Subject</option>
+          <option value="importance">By Importance</option>
+          <option value="time">By Time Required</option>
         </select>
       </div>
+
       <div>
         <label for="workHours" class="block font-semibold mb-2">Preferred Work Hours</label>
-        <input type="text" id="workHours" placeholder="e.g. 4–6 PM, Mon–Fri" class="w-full p-3 rounded-lg border border-gray-300" />
+        <p class="text-sm text-gray-500 mb-2">Specify when you usually study or complete assignments.</p>
+        <input type="text" id="workHours" placeholder="e.g. 4–6 PM, Mon–Fri" class="w-full p-3 rounded-lg border" />
       </div>
+
       <div>
-        <label for="eventStyle" class="block font-semibold mb-2">How should events be displayed?</label>
-        <select id="eventStyle" class="w-full p-3 rounded-lg border border-gray-300">
-          <option value="grouped">Grouped by Type</option>
+        <label for="eventStyle" class="block font-semibold mb-2">Event Display Style</label>
+        <p class="text-sm text-gray-500 mb-2">Choose how events should appear on your calendar.</p>
+        <select id="eventStyle" class="w-full p-3 rounded-lg border">
+          <option>--</option>
+          <option value="grouped">Grouped</option>
           <option value="color">Color-Coded</option>
-          <option value="minimal">Minimal View</option>
         </select>
       </div>
-      <div class="flex items-center gap-4">
-        <label class="font-semibold">Enable Reminders</label>
+
+      <div class="flex items-center gap-2">
         <input type="checkbox" id="enableReminders" class="w-5 h-5" />
+        <label class="font-semibold">Enable Reminders</label>
       </div>
-      <button type="submit" class="mt-6 bg-indigo-600 text-white px-6 py-3 rounded-full hover:bg-indigo-700 hover:scale-105 transition-all">Save Preferences</button>
+
+      <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700">Save Preferences</button>
     </form>
   </section>
 
   <!-- Main Grid -->
-  <main class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto mt-16 px-6">
-
+  <section class="max-w-6xl mx-auto mt-14 grid grid-cols-1 lg:grid-cols-2 gap-10">
     <!-- Calendar -->
-    <section class="bg-white/90 backdrop-blur-md p-10 rounded-3xl shadow-2xl">
-      <h2 id="calendar-title" class="text-2xl font-semibold mb-6 text-center"></h2>
-      <div class="grid grid-cols-7 gap-4 text-base text-center font-semibold text-gray-700 mb-4">
+    <div class="bg-white/90 backdrop-blur-md p-8 rounded-3xl shadow-2xl">
+      <h2 class="text-2xl font-semibold mb-4">Calendar</h2>
+      <div class="grid grid-cols-7 gap-2 text-center text-sm font-semibold text-gray-700 mb-2">
         <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
       </div>
-      <div id="calendar-grid" class="grid grid-cols-7 gap-4 text-sm min-h-[500px]"></div>
-    </section>
-
-    <!-- To-Do List -->
-    <section class="space-y-12">
-      <div class="bg-white/90 backdrop-blur-md p-10 rounded-3xl shadow-2xl">
-        <h2 class="text-2xl font-semibold mb-6">To-Do List</h2>
-        <ul id="todo-list" class="space-y-4 text-lg"></ul>
+      <div id="calendar" class="grid grid-cols-7 gap-2 text-sm font-medium text-gray-700">
+        <!-- Calendar cells injected here -->
       </div>
-    </section>
-  </main>
+    </div>
+
+    <!-- Right Column -->
+    <div class="space-y-10">
+      <!-- To-Do List -->
+      <div class="bg-white/90 backdrop-blur-md p-8 rounded-3xl shadow-2xl">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-semibold">To-Do List</h2>
+          <div class="flex gap-2">
+            <button id="prevDay" class="px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300">←</button>
+            <span id="dayLabel" class="font-semibold">Today</span>
+            <button id="nextDay" class="px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300">→</button>
+          </div>
+        </div>
+        <ul id="todo-list" class="space-y-4 text-lg"></ul>
+
+        <!-- Add Task Toggle -->
+        <button id="showAddTaskBtn" class="mt-6 bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700">Add Task</button>
+        <div id="addTaskForm" class="mt-4 space-y-4 hidden">
+          <input type="text" id="manualTaskName" placeholder="Task Name" class="w-full p-3 rounded-lg border" />
+          <input type="date" id="manualTaskDate" class="w-full p-3 rounded-lg border" />
+          <input type="number" id="manualTaskPriority" placeholder="Priority (e.g. 1.0)" class="w-full p-3 rounded-lg border" />
+          <button id="addManualTaskBtn" class="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700">Submit Task</button>
+        </div>
+      </div>
+
+      <!-- Upcoming Events -->
+      <div class="bg-white/90 backdrop-blur-md p-8 rounded-3xl shadow-2xl">
+        <h2 class="text-2xl font-semibold mb-4">Upcoming Events</h2>
+        <ul id="events-list" class="space-y-4 text-base"></ul>
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input type="text" id="eventName" placeholder="Event Name" class="p-3 rounded-lg border" />
+          <input type="date" id="eventDate" class="p-3 rounded-lg border" />
+          <input type="time" id="eventTime" class="p-3 rounded-lg border" />
+        </div>
+        <button id="addEventBtn" class="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700">Add Event</button>
+      </div>
+    </div>
+  </section>
 
   <!-- JavaScript -->
-  <script>
-    const tasks = [
-      { name: "Finish Essay Draft", due: "2025-09-16", weight: 40 },
-      { name: "Submit Math Homework", due: "2025-09-15", weight: 10 },
-      { name: "Review Lab Notes", due: "2025-09-20", weight: 5 }
-    ];
+<script>
+  const tasks = [];
+  const events = [];
+  let currentDayOffset = 0;
 
-    function renderCalendar() {
-      const calendarTitle = document.getElementById('calendar-title');
-      const calendarGrid = document.getElementById('calendar-grid');
-      calendarGrid.innerHTML = '';
+  function getDateLabel(offset) {
+    const date = new Date();
+    date.setDate(date.getDate() + offset);
+    return offset === 0 ? "Today" : date.toLocaleDateString("en-US");
+  }
 
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = today.getMonth();
-      const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-      calendarTitle.textContent = `${monthNames[month]} ${year}`;
+  function renderCalendar() {
+    const calendar = document.getElementById("calendar");
+    calendar.innerHTML = "";
 
-      const firstDay = new Date(year, month, 1).getDay();
-      const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
 
-      for (let i = 0; i < firstDay; i++) {
-        calendarGrid.appendChild(document.createElement('div'));
+    const firstDayOfMonth = new Date(year, month, 1);
+    const lastDayOfMonth = new Date(year, month + 1, 0);
+    const startDay = firstDayOfMonth.getDay();
+    const totalDays = lastDayOfMonth.getDate();
+    const totalCells = Math.ceil((startDay + totalDays) / 7) * 7;
+
+    for (let i = 0; i < totalCells; i++) {
+      const cell = document.createElement("div");
+      cell.className = "bg-gray-50 p-4 rounded-lg border h-24 flex items-start justify-start";
+
+      const dayNumber = i - startDay + 1;
+      if (i >= startDay && dayNumber <= totalDays) {
+        cell.innerHTML = `<strong>${dayNumber}</strong>`;
       }
 
-      for (let day = 1; day <= daysInMonth; day++) {
-        const cell = document.createElement('div');
-        cell.className = "bg-gray-50 p-4 rounded-lg border h-24 relative";
-        cell.innerHTML = `<strong>${day}</strong><div id="day-${day}" class="absolute bottom-2 left-2 text-xs text-blue-600"></div>`;
-        calendarGrid.appendChild(cell);
-      }
+      calendar.appendChild(cell);
     }
+  }
 
-    function renderTodoList() {
-      const list = document.getElementById("todo-list");
-      list.innerHTML = "";
+  function renderTodoList() {
+    const list = document.getElementById("todo-list");
+    list.innerHTML = "";
 
-      const today = new Date();
+    const today = new Date();
+    today.setDate(today.getDate() + currentDayOffset);
+    const todayStr = today.toLocaleDateString("en-US");
 
-      const sortedTasks = tasks
-        .map(task => {
-          const dueDate = new Date(task.due);
-          const daysUntilDue = Math.max(1, Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24)));
-          const priorityScore = task.weight / daysUntilDue;
+    const sorted = tasks
+      .filter(t => t.date === todayStr)
+      .sort((a, b) => b.priority - a.priority);
 
-          let label = "Low";
-          let color = "text-green-600";
-          if (priorityScore >= 1.0) {
-            label = "High";
-            color = "text-red-600";
-          } else if (priorityScore >= 0.5) {
-            label = "Medium";
-            color = "text-orange-500";
-          }
+    const completed = [];
+    sorted.forEach(task => {
+      const item = document.createElement("li");
+      item.className = "flex flex-col gap-2";
 
-          return { ...task, priorityScore, label, color };
-        })
-        .sort((a, b) => b.priorityScore - a.priorityScore);
+      const topRow = document.createElement("div");
+      topRow.className = "flex items-center justify-between";
 
-      sortedTasks.forEach(task => {
-          const item = document.createElement("li");
-          item.className = "flex items-center justify-between gap-4";
+      const left = document.createElement("div");
+      left.className = "flex items-center gap-3";
 
-          const left = document.createElement("div");
-          left.className = "flex items-center gap-4";
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.className = "w-5 h-5 accent-green-600";
+      checkbox.checked = task.done;
+      checkbox.addEventListener("change", () => {
+        task.done = true;
+        task.priority = 0;
+        renderTodoList();
+      });
 
-          const checkbox = document.createElement("input");
-          checkbox.type = "checkbox";
-          checkbox.className = "w-5 h-5 accent-indigo-600";
-          checkbox.addEventListener("change", () => {
-            tasks.splice(tasks.findIndex(t => t.name === task.name), 1);
+      const label = document.createElement("label");
+      label.textContent = task.name;
+      label.className = task.done ? "completed" : "";
+
+      left.appendChild(checkbox);
+      left.appendChild(label);
+
+      const tag = document.createElement("span");
+      tag.className = task.done ? "text-green-600 font-bold" : "text-red-600 font-semibold";
+      tag.textContent = task.done ? "✓" : `Priority: ${task.priority}`;
+
+      topRow.appendChild(left);
+      topRow.appendChild(tag);
+
+      const menu = document.createElement("div");
+      menu.className = "text-right";
+
+      const menuBtn = document.createElement("button");
+      menuBtn.textContent = "⋯";
+      menuBtn.className = "text-xl px-2 py-1 rounded hover:bg-gray-200";
+      menuBtn.onclick = () => {
+        const options = document.createElement("div");
+        options.className = "mt-2 space-x-4 text-sm";
+
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "✏️ Edit Priority";
+        editBtn.className = "text-blue-600 hover:underline";
+        editBtn.onclick = () => {
+          const newPriority = prompt("Enter new priority:", task.priority);
+          if (newPriority !== null && !isNaN(parseFloat(newPriority))) {
+            task.priority = parseFloat(newPriority);
             renderTodoList();
-          });
+          }
+        };
 
-          const label = document.createElement("label");
-          label.textContent = task.name;
-          label.className = "cursor-pointer";
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "🗑️ Delete";
+        deleteBtn.className = "text-red-600 hover:underline";
+        deleteBtn.onclick = () => {
+          tasks.splice(tasks.indexOf(task), 1);
+          renderTodoList();
+        };
 
-          left.appendChild(checkbox);
-          left.appendChild(label);
-
-          const priorityTag = document.createElement("span");
-          priorityTag.textContent = task.label;
-          priorityTag.className = `text-sm font-semibold ${task.color}`;
-
-          item.appendChild(left);
-          item.appendChild(priorityTag);
-          list.appendChild(item);
-        });
-    }
-
-    function savePreferences(e) {
-      e.preventDefault();
-      const prefs = {
-        organizeBy: document.getElementById('organizeBy').value,
-        workHours: document.getElementById('workHours').value,
-        eventStyle: document.getElementById('eventStyle').value,
-        enableReminders: document.getElementById('enableReminders').checked
+        options.appendChild(editBtn);
+        options.appendChild(deleteBtn);
+        menu.innerHTML = "";
+        menu.appendChild(options);
       };
-      localStorage.setItem('schoolioPreferences', JSON.stringify(prefs));
-      alert('Preferences saved!');
+
+      menu.appendChild(menuBtn);
+      item.appendChild(topRow);
+      item.appendChild(menu);
+
+      if (task.done) {
+        completed.push(item);
+      } else {
+        list.appendChild(item);
+      }
+    });
+
+    completed.forEach(item => list.appendChild(item));
+  }
+
+  function renderEvents() {
+    const list = document.getElementById("events-list");
+    list.innerHTML = "";
+    events.forEach(event => {
+      const item = document.createElement("li");
+      item.className = "flex justify-between items-center";
+      item.innerHTML = `
+        <div>
+          <strong>${event.name}</strong><br>
+          <span class="text-sm text-gray-600">${event.date} at ${event.time}</span>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+  }
+
+  document.getElementById("addEventBtn").addEventListener("click", () => {
+    const name = document.getElementById("eventName").value.trim();
+    const date = document.getElementById("eventDate").value;
+    const time = document.getElementById("eventTime").value;
+
+    if (!name || !date || !time) {
+      alert("Please fill out all event fields.");
+      return;
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      renderCalendar();
-      renderTodoList();
-      document.getElementById("preferencesForm").addEventListener("submit", savePreferences);
+    events.push({ name, date, time });
+    document.getElementById("eventName").value = "";
+    document.getElementById("eventDate").value = "";
+    document.getElementById("eventTime").value = "";
+    renderEvents();
+  });
+
+  document.getElementById("showAddTaskBtn").addEventListener("click", () => {
+    const form = document.getElementById("addTaskForm");
+    form.classList.toggle("hidden");
+  });
+
+  document.getElementById("addManualTaskBtn").addEventListener("click", () => {
+    const name = document.getElementById("manualTaskName").value.trim();
+    const date = new Date(document.getElementById("manualTaskDate").value);
+    const priority = parseFloat(document.getElementById("manualTaskPriority").value);
+
+    if (!name || isNaN(priority) || isNaN(date.getTime())) {
+      alert("Please fill out all fields correctly.");
+      return;
+    }
+
+    tasks.push({
+      name,
+      date: date.toLocaleDateString("en-US"),
+      priority,
+      done: false
     });
-  </script>
+
+    document.getElementById("manualTaskName").value = "";
+    document.getElementById("manualTaskDate").value = "";
+    document.getElementById("manualTaskPriority").value = "";
+    document.getElementById("addTaskForm").classList.add("hidden");
+    renderTodoList();
+  });
+
+  document.getElementById("prevDay").addEventListener("click", () => {
+    currentDayOffset--;
+    document.getElementById("dayLabel").textContent = getDateLabel(currentDayOffset);
+    renderTodoList();
+  });
+
+  document.getElementById("nextDay").addEventListener("click", () => {
+    currentDayOffset++;
+    document.getElementById("dayLabel").textContent = getDateLabel(currentDayOffset);
+    renderTodoList();
+  });
+
+  document.getElementById("uploadBtn").addEventListener("click", () => {
+    const fileInput = document.getElementById("syllabusUpload");
+    const file = fileInput.files[0];
+    if (!file) return alert("Please upload a syllabus file.");
+
+    const today = new Date();
+    const formatDate = d => d.toLocaleDateString("en-US");
+
+    tasks.push(
+      { name: "Submit Essay", date: formatDate(today), priority: 1.2, done: false },
+      { name: "Review Notes", date: formatDate(new Date(today.getTime() + 86400000)), priority: 0.8, done: false },
+      { name: "Prepare Presentation", date: formatDate(new Date(today.getTime() + 2 * 86400000)), priority: 0.5, done: false }
+    );
+
+    renderTodoList();
+  });
+
+  document.querySelector("form#preferencesForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const prefs = {
+      organizeBy: document.getElementById("organizeBy").value,
+      workHours: document.getElementById("workHours").value,
+      eventStyle: document.getElementById("eventStyle").value,
+      enableReminders: document.getElementById("enableReminders").checked
+    };
+    localStorage.setItem("schoolioPreferences", JSON.stringify(prefs));
+    alert("Preferences saved!");
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("dayLabel").textContent = getDateLabel(currentDayOffset);
+    renderCalendar();
+    renderTodoList();
+    renderEvents();
+  });  </script>
 </body>
 </html>
