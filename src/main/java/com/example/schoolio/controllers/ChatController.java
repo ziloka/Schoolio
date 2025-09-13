@@ -1,16 +1,14 @@
 package com.example.schoolio.controllers;
 
 import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
-import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.ai.openai.api.OpenAiApi;
-import org.springframework.ai.vectorstore.SimpleVectorStore;
+import org.springframework.ai.document.Document;
+import org.springframework.ai.reader.TextReader;
 import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,18 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.chat.prompt.PromptTemplate;
-import org.springframework.ai.chat.prompt.SystemPromptTemplate;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.client.ChatClient.Builder;
 import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.model.Generation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
 
-import javax.print.Doc;
-import javax.swing.text.Document;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.function.Function;
@@ -88,8 +79,11 @@ class ChatController {
                 .build();
 
         try {
-            String content = new String(file.getBytes(), StandardCharsets.UTF_8);
-//            Document document = new Document(content);
+            String contents = new String(file.getBytes(), StandardCharsets.UTF_8);
+            TextReader textReader = new TextReader(contents);
+            List<Document> documents = textReader.read();
+
+            this.vectorStore.add(documents);
 
             String promptText = "You are a student planner assistant. Read the following syllabus and extract tasks with due dates and priorities:\n\n" + content;
             Prompt prompt = new Prompt(new UserMessage(promptText));
