@@ -17,11 +17,6 @@ import org.springframework.ai.chat.model.Generation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
 
-// import org.springframework.ai.model.tool.ToolInvocation;
-// import org.springframework.ai.model.tool.ToolCall;
-// import org.springframework.ai.model.tool.ToolResult;
-// import org.springframework.ai.model.tool.;;
-
 import java.util.List;
 import java.util.function.Function;
 /**

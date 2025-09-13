@@ -1,3 +1,5 @@
+package com.example.schoolio.controllers;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpHeaders;
@@ -45,7 +47,8 @@ public class SyllabusController {
     private static final List<String> SCOPES = Collections.singletonList("https://www.googleapis.com/auth/calendar.events");
 
     @GetMapping("/upload-syllabus")
-    public ResponseEntity<String> getUploadSyllabus(Model model) {
+    public ResponseEntity<String> getUploadSyllabus() {
+        System.out.println("hellooo");
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/");
         return new ResponseEntity<String>(headers,HttpStatus.FOUND);
@@ -58,8 +61,7 @@ public class SyllabusController {
      * @return A ResponseEntity with a success message or an error message.
      */
     @PostMapping("/upload-syllabus")
-    public ResponseEntity<String> uploadSyllabus(@RequestParam("file") MultipartFile file,
-                                                 @RequestParam(value = "startDate", required = false) String startDate) {
+    public ResponseEntity<String> uploadSyllabus(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please upload a file.");
         }
@@ -69,15 +71,15 @@ public class SyllabusController {
             String text = textStripper.getText(document);
 
             // Handle the case where the start date is not provided
-            LocalDate firstDayOfClass;
-            if (startDate != null && !startDate.isEmpty()) {
-                firstDayOfClass = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
-            } else {
+            // LocalDate firstDayOfClass;
+            // if (startDate != null && !startDate.isEmpty()) {
+            //     firstDayOfClass = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+            // } else {
                 // Use a default or ask the user for a specific date.
                 // In a production app, you would prompt the user. For this example, we'll use today.
-                firstDayOfClass = LocalDate.now();
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Start date not provided. Please provide the first day of class in MM-dd-yyyy format.");
-            }
+            LocalDate firstDayOfClass = LocalDate.now();
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Start date not provided. Please provide the first day of class in MM-dd-yyyy format.");
+            // }
 
             // Create Google Calendar service and create events
             Calendar calendarService = getCalendarService();
